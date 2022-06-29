@@ -1,7 +1,6 @@
-from functools import wraps,partial
+from functools import wraps
 import time
-import pdb
-import matplotlib.pyplot as plt
+
 
 def doublewrap(f):
     '''
@@ -39,7 +38,6 @@ def timer(func, *kwargs):
         time taken to run a function.
 
     '''
-    #pdb.set_trace()
     if 'd' in kwargs:
         @wraps(func)
         def wrap(*args,**kwargs):
@@ -55,17 +53,3 @@ def timer(func, *kwargs):
             stop=time.time()
             return stop-start
     return wrap
-
-
-
-
-@timer('d')
-def test(n):
-   # pdb.set_trace()
-    ans=0
-    for i in range(n):
-        ans+=i
-    return ans
-        
-if __name__=="__main__":
-    print(test(10**6))
