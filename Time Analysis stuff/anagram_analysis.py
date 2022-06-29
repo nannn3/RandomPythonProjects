@@ -37,7 +37,8 @@ def is_anagram2(s1,s2):
         if s1[i]!=s2[i]:
             return False
     return True
-@analysis.timer
+
+@analysis.timer('d')
 def is_anagram3(s1,s2):
     c1=[0]*26
     c2=[0]*26
@@ -59,7 +60,7 @@ if __name__ == '__main__':
     time2=[]
     time3=[]
     size=[]
-    for i in range(8):
+    for i in range(7):
         s1=[0]*(10**i)
         s2=[0]*(10**i)
         for i in range(len(s1)):
@@ -70,7 +71,7 @@ if __name__ == '__main__':
         size.append(len(s1))
         time1.append(is_anagram1(s1,s2))
         time2.append(is_anagram2(s1,s2))
-        time3.append(is_anagram3(s1,s2))
+        time3.append(is_anagram3(s1,s2)[1])
         
     plt.plot(size,time1,label="is_anagram1")
     plt.plot(size,time2,label="is_anagram2")

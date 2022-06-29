@@ -23,19 +23,43 @@ def doublewrap(f):
 
 @doublewrap
 def timer(func, *kwargs):
+    '''
     
-    @wraps(func)
-    def wrap(*args, **kwargs):
-        start=time.time()
-        ans=func(*args, **kwargs)
-        stop=time.time()
-        return stop-start
+
+    Parameters
+    ----------
+    func : Function
+        the function to be timed
+    *kwargs : optional
+        d: return the data along with the time it takes to run in the form (data,time).
+
+    Returns
+    -------
+    Int
+        time taken to run a function.
+
+    '''
+    #pdb.set_trace()
+    if 'd' in kwargs:
+        @wraps(func)
+        def wrap(*args,**kwargs):
+            start=time.time()
+            ans=func(*args,**kwargs)
+            stop=time.time()
+            return ans,stop-start
+    else:
+        @wraps(func)
+        def wrap(*args, **kwargs):
+            start=time.time()
+            func(*args, **kwargs)
+            stop=time.time()
+            return stop-start
     return wrap
 
 
 
 
-@timer()
+@timer('d')
 def test(n):
    # pdb.set_trace()
     ans=0
