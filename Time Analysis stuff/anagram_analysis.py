@@ -4,7 +4,7 @@ Created on Mon Jun 27 08:12:00 2022
 
 @author: Tristen
 """
-import time
+import analysis
 import string
 import random
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 
         
-@timer        
+@analysis.timer        
 def is_anagram1(s1,s2):
     if len(s1) != len(s2):
         return False
@@ -27,7 +27,7 @@ def is_anagram1(s1,s2):
                 return False
         return True
 
-@timer
+@analysis.timer
 def is_anagram2(s1,s2):
     if len(s1)!=len(s2):
         return False
@@ -37,7 +37,7 @@ def is_anagram2(s1,s2):
         if s1[i]!=s2[i]:
             return False
     return True
-@timer
+@analysis.timer
 def is_anagram3(s1,s2):
     c1=[0]*26
     c2=[0]*26

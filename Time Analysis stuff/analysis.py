@@ -1,6 +1,7 @@
 from functools import wraps,partial
 import time
 import pdb
+import matplotlib.pyplot as plt
 
 def doublewrap(f):
     '''
@@ -28,8 +29,9 @@ def timer(func, *kwargs):
         start=time.time()
         ans=func(*args, **kwargs)
         stop=time.time()
-        return ans,stop-start
+        return stop-start
     return wrap
+
 
 
 
