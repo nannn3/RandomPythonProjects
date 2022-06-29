@@ -10,13 +10,7 @@ import random
 import matplotlib.pyplot as plt
 
 
-def timer(func):
-    def wrap(s1,s2):
-        start=time.time()
-        func(s1,s2)
-        end=time.time()
-        return end-start
-    return wrap
+
         
 @timer        
 def is_anagram1(s1,s2):
