@@ -31,12 +31,13 @@ class Hand:
     def __repr__(self):
         return 'Hand of size %s' %self.size
     def __str__(self):
-        foo=f"{self.owner}'s hand :\n"
-        foo+=cardArt(self.cards)
-        return(foo)
-
-
-        return foo
+        if self.cards != None:
+            foo=f"{self.owner}'s hand :\n"
+            foo+=cardArt(self.cards)
+            return(foo)
+        else:
+            return f"{self.owner}'s hand is empty\n"
+    
     def add(self,card):
         self.cards.append(card)
         self.size=len(self.cards)
@@ -76,29 +77,50 @@ class Card:
         return cardArt(self)
     
 def cardArt(*cards):
-   # pdb.set_trace()
+    ''' Helper function to make printing the ACII art for cards'''
     suits_symbols = {'Spades':'♠','Diamonds': '♦','Hearts': '♥', 'Clubs' :'♣'}
     
     lines=[[] for i in range(9)]# create an empty list of list, each sublist is a line
-    for card in cards[0]:
-        if card.rank== '10': #10 is the only rank we want to display 2 characters
-            space=''
-            rank=card.rank
-        else: 
-            rank=card.rank[0] #Take the first part of the rank, IE, the first letter for special cards
-            space=' '
-        sym=suits_symbols.get(card.suit) #Grab the symbol for  the suit
-        # add the individual card on a line by line basis
-        lines[0].append('┌─────────┐')
-        lines[1].append(' │{}{}                        │'.format(rank, space))  # use two {} one for char, one for space or char
-        lines[2].append(' │                            │')
-        lines[3].append(' │                            │')
-        lines[4].append(' │            {}          │'.format(sym))
-        lines[5].append(' │                            │')
-        lines[6].append(' │                            │')
-        lines[7].append(' │                        {}{}│'.format(space, rank))
-        lines[8].append('└─────────┘')
-    
+    #pdb.set_trace()
+    if type(cards[0])==list:
+        for card in cards[0]:
+            if card.rank== '10': #10 is the only rank we want to display 2 characters
+                space=''
+                rank=card.rank
+            else: 
+                rank=card.rank[0] #Take the first part of the rank, IE, the first letter for special cards
+                space=' '
+            sym=suits_symbols.get(card.suit) #Grab the symbol for  the suit
+            # add the individual card on a line by line basis
+            lines[0].append('┌─────────┐')
+            lines[1].append('│{}{}       │'.format(rank, space))  # use two {} one for char, one for space or char
+            lines[2].append('│         │')
+            lines[3].append('│         │')
+            lines[4].append('│    {}    │'.format(sym))
+            lines[5].append('│         │')
+            lines[6].append('│         │')
+            lines[7].append('│       {}{}│'.format(space, rank))
+            lines[8].append('└─────────┘')
+    else:
+            card=cards[0]
+            if card.rank== '10': #10 is the only rank we want to display 2 characters
+                space=''
+                rank=card.rank
+            else: 
+                rank=card.rank[0] #Take the first part of the rank, IE, the first letter for special cards
+                space=' '
+            sym=suits_symbols.get(card.suit) #Grab the symbol for  the suit
+            # add the individual card on a line by line basis
+            lines[0].append('┌─────────┐')
+            lines[1].append('│{}{}       │'.format(rank, space))  # use two {} one for char, one for space or char
+            lines[2].append('│         │')
+            lines[3].append('│         │')
+            lines[4].append('│    {}    │'.format(sym))
+            lines[5].append('│         │')
+            lines[6].append('│         │')
+            lines[7].append('│       {}{}│'.format(space, rank))
+            lines[8].append('└─────────┘')
+        
     result = [''.join(line) for line in lines]
 
     return '\n'.join(result)
@@ -110,6 +132,8 @@ if __name__=='__main__':
     card=deck.draw()
     for i in range(3):
      hand.add(deck.draw())
+    print(hand)
+    hand.empty()
     print(hand)
     print(card)
 
