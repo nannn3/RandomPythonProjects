@@ -20,7 +20,7 @@ class Deck:
         self.avail.pop(0)
         return foo
     
-    def shuffle(self): #Puts the discard pile back into the deck and shuffles
+    def shuffle(self): # shuffles the remaining cards
         return random.shuffle(self.avail)
     
 class Hand:
@@ -77,6 +77,7 @@ class Card:
         return cardArt(self)
     
 def cardArt(*cards):
+    
     ''' Helper function to make printing the ACII art for cards'''
     suits_symbols = {'Spades':'♠','Diamonds': '♦','Hearts': '♥', 'Clubs' :'♣'}
     
