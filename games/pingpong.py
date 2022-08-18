@@ -115,11 +115,13 @@ def game_setup():
         global player
         player = 1
         game_start(1)
+    # end p1
 
     def p2():
         global player
         player = 2
         game_start(2)
+    # end p2
 
     button1P = Button(canvas, text="1 Paddle", bg='grey', command=p1, anchor=W)
     button1P.configure(
@@ -138,19 +140,27 @@ def game_setup():
 
 def game_over():
     # Displays game over screen and allows user to replay
+    def leave():
+        # called to end the program
+        print("Have a nice day!")
+        gui.destroy()
+
     width = int(canvas.cget("width"))
     height = int(canvas.cget('height'))
     canvas.delete('all')
+
     text1 = canvas.create_text(width/2, height/2, text="GAME OVER!",
                                fill='red', font=("Times New Roman", 24))
     text2 = canvas.create_text(
         width/2, (height/2)+20, text="Would you like to play again?")
+    # Yes button V
     button1 = Button(canvas, text="Yes",
                      command=game_setup, anchor=W, bg='springGreen')
     button1.configure(
         width=2, activebackground="#33B5E5", relief=FLAT)
     button1_window = canvas.create_window(
         (width/2)-10, (height/2)+50, anchor=E, window=button1)
+    # No button V
     button2 = Button(canvas, text='No',
                      command=leave, anchor=W, bg='red')
     button2.configure(
@@ -159,17 +169,25 @@ def game_over():
         width/2, (height/2)+50, anchor=W, window=button2)
 
 
-def leave():
-    # called from game_over()
-    print("Have a nice day!")
-    gui.destroy()
+def wall_ai(ball, paddle):
+    # basic ai, might make more complex later
+    if ball.get_center() < paddle.get_x1():
+        paddle.move(-2)
+    elif ball.get_center() > paddle.get_x2():
+        paddle.move(2)
 
 
 def animation():
-    # TODO: Make the bottom paddle move,implement collisions for it, keep track of points
+    # TODO: Keep track of points
     global ball
     global top_paddle
-
+    global player
+    if player == 2:
+        global bottom_paddle
+        wall_ai(ball, bottom_paddle)
+        if ball.get_y2() > bottom_paddle.get_y1():
+            if collide(ball, bottom_paddle):
+                ball.dy *= -1.1
     if ball.get_y1() < top_paddle.get_y2():
         if collide(ball, top_paddle):
             ball.dy *= -1.1
@@ -182,6 +200,7 @@ def animation():
     if ball.y2 > int(canvas.cget('height')) or ball.y1 < 0:
         ball.dy *= -1
     ball.move()
+
     canvas.pack()
     canvas.after(10, animation)
 
@@ -195,13 +214,19 @@ def collide(ball, paddle):
 
 
 def moveRight(event):
-    if top_paddle.get_x2() <= int(canvas.cget('width')):
-        top_paddle.move(2)
+    try:
+        if top_paddle.get_x2() <= int(canvas.cget('width')):
+            top_paddle.move(2)
+    except ValueError:  # Hush console errors that occur when at the game over screen
+        pass
 
 
 def moveLeft(event):
-    if top_paddle.get_x1() > 0:
-        top_paddle.move(-2)
+    try:
+        if top_paddle.get_x1() > 0:
+            top_paddle.move(-2)
+    except ValueError:
+        pass
 
 
 if __name__ == "__main__":
