@@ -7,7 +7,6 @@
 
 from tkinter import *
 from random import choice
-import pdb
 
 
 class Ball:
@@ -114,27 +113,28 @@ def game_setup():
     def p1():
         global player
         player = 1
-        game_start(1)
+        game_start(player)
     # end p1
 
     def p2():
         global player
         player = 2
-        game_start(2)
+        game_start(player)
     # end p2
 
-    button1P = Button(canvas, text="1 Paddle", bg='grey', command=p1, anchor=W)
+    button1P = Button(canvas, text="1 Paddle", bg='grey', command=p1, anchor=CENTER)
     button1P.configure(
-        width=(c_width//2), activebackground='#33B5E5', relief=FLAT)
+        width=(c_width//4), activebackground='#33B5E5', relief=FLAT)
     button1P_window = canvas.create_window(
-        c_width/4, (c_height/2)-(c_height/10), anchor=W, window=button1P)
+        c_width/4, (c_height/2)-(c_height/10), anchor=W, width=c_width//2, window=button1P)
 
     button2P = Button(canvas, text="2 Paddles",
-                      bg='grey', command=p2, anchor=W)
+                      bg='grey', command=p2, anchor=CENTER)
     button2P.configure(
         width=c_width//2, activebackground='#33B5E5', relief=FLAT)
     button2P_window = canvas.create_window(
-        c_width/4, (c_height/2)+(c_height/10), anchor=W, window=button2P)
+        c_width/4, (c_height/2)+(c_height/10), anchor=W, width=c_width//2, window=button2P)
+
     canvas.pack()
 
 
@@ -187,18 +187,19 @@ def animation():
         wall_ai(ball, bottom_paddle)
         if ball.get_y2() > bottom_paddle.get_y1():
             if collide(ball, bottom_paddle):
-                ball.dy *= -1.1
+                ball.set_dy(ball.get_dy()*-1.1)
+
     if ball.get_y1() < top_paddle.get_y2():
         if collide(ball, top_paddle):
-            ball.dy *= -1.1
+            ball.set_dy(ball.get_dy()*-1.1)
         else:
             game_over()
             return
-    # note to self, y1 is the top, y2 is the bottom of the ball
-    if ball.x2 > int(canvas.cget('width')) or ball.x1 < 0:
-        ball.dx *= -1
-    if ball.y2 > int(canvas.cget('height')) or ball.y1 < 0:
-        ball.dy *= -1
+    # note that x1 is the left side, x2 is right, y1 is top, and y2 is bottom
+    if ball.get_x2() > int(canvas.cget('width')) or ball.get_x1() < 0:
+        ball.set_dx(ball.get_dx() * -1)
+    if ball.get_y2() > int(canvas.cget('height')) or ball.get_y1() < 0:
+        ball.set_dy(ball.get_dy() * -1)
     ball.move()
 
     canvas.pack()
@@ -232,7 +233,6 @@ def moveLeft(event):
 if __name__ == "__main__":
     # main program
     gui = Tk()
-    # pdb.set_trace()
     canvas = Canvas(gui)
     dx, dy = 1, 1
     game_setup()
