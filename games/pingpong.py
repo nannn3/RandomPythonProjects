@@ -91,6 +91,7 @@ class Board:
         self.ball = None
         self.p1 = None
         self.p2 = None
+        self.winner = None
 
     def get_ball(self):
         return self.ball
@@ -109,6 +110,12 @@ class Board:
 
     def set_p2(self, paddle):
         self.p2 = paddle
+
+    def get_winner(self):
+        return self.winner
+
+    def set_winner(self, winner):
+        self.winner = winner
 
 
 board = Board()
@@ -174,22 +181,28 @@ def game_over():
 
     text1 = canvas.create_text(width/2, height/2, text="GAME OVER!",
                                fill='red', font=("Times New Roman", 24))
-    text2 = canvas.create_text(
-        width/2, (height/2)+20, text="Would you like to play again?")
+    if board.get_winner() == 'Player':
+        text2 = canvas.create_text(
+            width/2, (height/2)+30, text="You Won!", fill='green', font=("Times New Roman", 20))
+    else:
+        text2 = canvas.create_text(width/2, (height/2)+30, text="You lost!",
+                                   fill='red', font=("Times New Roman", 20))
+    text3 = canvas.create_text(
+        width/2, (height/2)+50, text="Would you like to play again?")
     # Yes button V
     button1 = Button(canvas, text="Yes",
                      command=game_setup, anchor=W, bg='springGreen')
     button1.configure(
         width=2, activebackground="#33B5E5", relief=FLAT)
     button1_window = canvas.create_window(
-        (width/2)-10, (height/2)+50, anchor=E, window=button1)
+        (width/2)-10, (height/2)+70, anchor=E, window=button1)
     # No button V
     button2 = Button(canvas, text='No',
                      command=leave, anchor=W, bg='red')
     button2.configure(
         width=2, activebackground='#33b5e5', relief=FLAT)
     button2_window = canvas.create_window(
-        width/2, (height/2)+50, anchor=W, window=button2)
+        width/2, (height/2)+70, anchor=W, window=button2)
 
 
 def wall_ai(ball, paddle):
@@ -210,11 +223,16 @@ def animation(*args):
         if ball.get_y2() > bottom_paddle.get_y1():
             if collide(ball, bottom_paddle):
                 ball.set_dy(ball.get_dy()*-1.1)
+            else:
+                board.set_winner("Player")
+                game_over()
+                return
 
     if ball.get_y1() < top_paddle.get_y2():
         if collide(ball, top_paddle):
             ball.set_dy(ball.get_dy()*-1.1)
         else:
+            board.set_winner("Ai")
             game_over()
             return
     # note that x1 is the left side, x2 is right, y1 is top, and y2 is bottom
