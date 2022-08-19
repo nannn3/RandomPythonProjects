@@ -6,7 +6,6 @@
 
 
 from tkinter import *
-from random import choice
 
 
 class Ball:
@@ -87,17 +86,46 @@ class Paddle:
         return int(self.y2)
 
 
+class Board:
+    def __init__(self):
+        self.ball = None
+        self.p1 = None
+        self.p2 = None
+
+    def get_ball(self):
+        return self.ball
+
+    def get_p1(self):
+        return self.p1
+
+    def get_p2(self):
+        return self.p2
+
+    def set_ball(self, ball):
+        self.ball = ball
+
+    def set_p1(self, paddle):
+        self.p1 = paddle
+
+    def set_p2(self, paddle):
+        self.p2 = paddle
+
+
+board = Board()
+
+
 def game_start(plyr: int):
-    global ball
-    global top_paddle
     canvas.delete("all")
-    width = int(canvas.cget('width'))
     height = int(canvas.cget('height'))
-    if plyr == 2:
-        global bottom_paddle
-        bottom_paddle = Paddle(0, height, 100, height-10, canvas, 'green')
     top_paddle = Paddle(0, 0, 100, 10, canvas, 'blue')
     ball = Ball(canvas, 'red')
+    if plyr == 2:
+        bottom_paddle = Paddle(0, height, 100, height-10, canvas, 'green')
+    else:
+        bottom_paddle = None
+    board.set_ball(ball)
+    board.set_p1(top_paddle)
+    board.set_p2(bottom_paddle)
     canvas.pack()
     animation()
 
@@ -111,18 +139,14 @@ def game_setup():
     # local functions to wrap it
 
     def p1():
-        global player
-        player = 1
-        game_start(player)
+        game_start(1)
     # end p1
 
     def p2():
-        global player
-        player = 2
-        game_start(player)
+        game_start(2)
     # end p2
-
-    button1P = Button(canvas, text="1 Paddle", bg='grey', command=p1, anchor=CENTER)
+    button1P = Button(canvas, text="1 Paddle", bg='grey',
+                      command=p1, anchor=CENTER)
     button1P.configure(
         width=(c_width//4), activebackground='#33B5E5', relief=FLAT)
     button1P_window = canvas.create_window(
@@ -134,7 +158,6 @@ def game_setup():
         width=c_width//2, activebackground='#33B5E5', relief=FLAT)
     button2P_window = canvas.create_window(
         c_width/4, (c_height/2)+(c_height/10), anchor=W, width=c_width//2, window=button2P)
-
     canvas.pack()
 
 
@@ -177,13 +200,12 @@ def wall_ai(ball, paddle):
         paddle.move(2)
 
 
-def animation():
+def animation(*args):
     # TODO: Keep track of points
-    global ball
-    global top_paddle
-    global player
-    if player == 2:
-        global bottom_paddle
+    ball = board.get_ball()
+    top_paddle = board.get_p1()
+    bottom_paddle = board.get_p2()
+    if bottom_paddle:
         wall_ai(ball, bottom_paddle)
         if ball.get_y2() > bottom_paddle.get_y1():
             if collide(ball, bottom_paddle):
@@ -216,16 +238,16 @@ def collide(ball, paddle):
 
 def moveRight(event):
     try:
-        if top_paddle.get_x2() <= int(canvas.cget('width')):
-            top_paddle.move(2)
+        if board.get_p1().get_x2() <= int(canvas.cget('width')):
+            board.get_p1().move(2)
     except ValueError:  # Hush console errors that occur when at the game over screen
         pass
 
 
 def moveLeft(event):
     try:
-        if top_paddle.get_x1() > 0:
-            top_paddle.move(-2)
+        if board.get_p1().get_x1() > 0:
+            board.get_p1().move(-2)
     except ValueError:
         pass
 
@@ -234,7 +256,6 @@ if __name__ == "__main__":
     # main program
     gui = Tk()
     canvas = Canvas(gui)
-    dx, dy = 1, 1
     game_setup()
     gui.bind('<Right>', moveRight)
     gui.bind('<Left>', moveLeft)
