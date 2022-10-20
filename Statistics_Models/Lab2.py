@@ -5,13 +5,16 @@ Spyder Editor
 @author: Tristen Miller (trkmille@ucsc.edu)
 
 @discription: Lab2 for statistics, demonstartes the question:
-    An urn contains 𝑎 azure balls and 𝑐 carmine balls, where 𝑎 > 0 and 𝑐 > 0. Balls
+    An urn contains a azure balls and c carmine balls, where  a>0 and c>0 . Balls
 are selected from the urn at random and discarded, until the first time a selected ball
 has a color different from its predecessor. That ball is then replaced, and the
 procedure is restarted. The process continues until the last ball is discarded. Show
 that this last ball is equally likely to be azure or carmine.
 
-For a=[10,50,90] and the total number of balls is 100
+Let the total number of balls be 100, so that a+ c= 100, and let a= 10, 50 and 90, respectively. Run
+2000 trials of the experiment for each value of a and calculate the relative frequency of the last ball
+discarded being azure, in each case.
+
 """
 from random import choice, shuffle
 from datetime import datetime
@@ -34,9 +37,9 @@ def main(a):
         total = 100
         jar = []
         last_pick = None
-        for i in range(a):
+        for _ in range(a):
             jar.append(balls("Azure"))
-        for i in range(total-a):
+        for _ in range(total-a):
             jar.append(balls("Carmine"))
         shuffle(jar) #not strictly required, but no real reason not to
 
