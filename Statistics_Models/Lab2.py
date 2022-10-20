@@ -4,7 +4,7 @@ Spyder Editor
 
 @author: Tristen Miller (trkmille@ucsc.edu)
 
-@discription: Lab2 for statistics, demonstartes the question:
+@discription: Lab2 for statistics, demonstrates the question:
     An urn contains a azure balls and c carmine balls, where  a>0 and c>0 . Balls
 are selected from the urn at random and discarded, until the first time a selected ball
 has a color different from its predecessor. That ball is then replaced, and the
