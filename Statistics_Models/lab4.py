@@ -20,10 +20,11 @@ mean and variance you compute in this project will be obtained by performing 10,
 experiment.
 :"""
 from random import random
+import pdb
 
 def coinFlip(p):
     '''
-    
+
 
     Parameters
     ----------
@@ -36,12 +37,13 @@ def coinFlip(p):
         Either H for heads or T for tails.
 
     '''
-    if random()<p:
+    if random() < p:
         return "H"
     else:
         return "T"
 
-def getAverage(ls:list):
+
+def getAverage(ls: list):
     '''
     Parameters
     ----------
@@ -54,19 +56,40 @@ def getAverage(ls:list):
         the average of the list
 
     '''
-    if len(ls)==0:
+    if len(ls) == 0:
         return 0
-    tot=0
+    tot = 0
     for i in ls:
-        tot+=i
-    tot /=len(ls)
+        tot += i
+    tot /= len(ls)
     return tot
 
-def testAverage():
-    assert(getAverage([1 for i in range(10)])==1)
-    ls=[-1,1]
-    assert(getAverage(ls)==0)
-    assert(getAverage([])==0)
 
-if __name__=='__main__':
+def testAverage():
+    'Quick check that I did not mess up getAverage()'
+    assert(getAverage([1 for i in range(10)]) == 1)
+    ls = [-1, 1]
+    assert(getAverage(ls) == 0)
+    assert(getAverage([]) == 0)
+
+
+def getVariance(ls: list):
+    mean = getAverage(ls)
+    tot = 0
+    for i in ls:
+        X = (i-mean)**2
+        tot += X
+    tot /= (len(ls)-1)
+    return tot, mean  # We're going to need the mean anyway, no need to make a seperate call
+
+def testVariance():
+
+    ls=[1 for i in range(10)]
+    assert(getVariance(ls)[0]==0)
+    ls=[1,2,3,4]
+    assert(getVariance(ls)[0]==5/3)
+   
+
+if __name__ == '__main__':
     testAverage()
+    testVariance()
