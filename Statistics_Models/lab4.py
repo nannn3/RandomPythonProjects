@@ -20,7 +20,7 @@ mean and variance you compute in this project will be obtained by performing 10,
 experiment.
 :"""
 from random import random
-import pdb
+import numpy as np
 
 def coinFlip(p):
     '''
@@ -74,6 +74,20 @@ def testAverage():
 
 
 def getVariance(ls: list):
+    '''
+    Parameters
+    ----------
+    ls : list
+        list to get a variance and mean from.
+
+    Returns
+    -------
+    tot,mean:(float,float)
+        the variance and the mean of the list of numbers
+
+    '''
+    if len(ls) == 0:
+        return 0, 0
     mean = getAverage(ls)
     tot = 0
     for i in ls:
@@ -82,14 +96,49 @@ def getVariance(ls: list):
     tot /= (len(ls)-1)
     return tot, mean  # We're going to need the mean anyway, no need to make a seperate call
 
-def testVariance():
 
-    ls=[1 for i in range(10)]
-    assert(getVariance(ls)[0]==0)
-    ls=[1,2,3,4]
-    assert(getVariance(ls)[0]==5/3)
-   
+def testVariance():
+    'quick check that I did variance right'
+    ls = [1 for i in range(10)]
+    assert(getVariance(ls)[0] == 0)
+    ls = [1, 2, 3, 4]
+    assert(getVariance(ls)[0] == 5/3)
+    assert(getVariance([])[0] == 0)
+
+
+def single_trial(p, q):
+    x = 0
+    Y = []
+    while(True):
+        if coinFlip(p) == "H":
+            break
+        x += 1
+    for _ in range(x):
+        if coinFlip(q) == "H":
+            Y.append(1)
+        else:
+            Y.append(0)
+    var, mean = getVariance(Y)
+    return var, mean
+
+
+def main():
+    probs = [.1*i for i in range(1, 10)]
+    size=len(probs) #we don't need a zero row/column
+    means=np.zeros((size,size))
+    varsMat=np.zeros((size,size))
+    for p in probs:
+        indexP=int((p*10)-1)
+        for q in probs:
+            indexQ=int((q*10)-1)
+            for _ in range(10000):
+                var, mean = single_trial(p, q)
+                means[indexP][indexQ] +=mean
+                varsMat[indexP][indexQ]+= var
+    print(means)
+
 
 if __name__ == '__main__':
     testAverage()
     testVariance()
+    main()
