@@ -22,10 +22,9 @@ experiment.
 from random import random
 import numpy as np
 
+
 def coinFlip(p):
     '''
-
-
     Parameters
     ----------
     p : float
@@ -88,6 +87,8 @@ def getVariance(ls: list):
     '''
     if len(ls) == 0:
         return 0, 0
+    if len(ls) == 1:
+        return 0, ls[0]
     mean = getAverage(ls)
     tot = 0
     for i in ls:
@@ -108,34 +109,36 @@ def testVariance():
 
 def single_trial(p, q):
     x = 0
-    Y = []
+    y = 0
     while(True):
+        x += 1
         if coinFlip(p) == "H":
             break
-        x += 1
     for _ in range(x):
         if coinFlip(q) == "H":
-            Y.append(1)
-        else:
-            Y.append(0)
-    var, mean = getVariance(Y)
-    return var, mean
+            y += 1
+    return y
 
 
 def main():
+    np.set_printoptions(precision=3)
+    np.set_printoptions(suppress=True)
     probs = [.1*i for i in range(1, 10)]
-    size=len(probs) #we don't need a zero row/column
-    means=np.zeros((size,size))
-    varsMat=np.zeros((size,size))
+    size = len(probs)
+    means = np.zeros((size, size))
+    varsMat = np.zeros((size, size))
     for p in probs:
-        indexP=int((p*10)-1)
+        indexP = int((p*10)-1)
         for q in probs:
-            indexQ=int((q*10)-1)
+            indexQ = int((q*10)-1)
+            Y = []
             for _ in range(10000):
-                var, mean = single_trial(p, q)
-                means[indexP][indexQ] +=mean
-                varsMat[indexP][indexQ]+= var
-    print(means)
+                Y.append(single_trial(p, q))
+            var, mean = getVariance(Y)
+            means[indexP][indexQ] = mean
+            varsMat[indexP][indexQ] = var
+    print("Means:\n",means)
+    print("Variance:\n",varsMat)
 
 
 if __name__ == '__main__':
